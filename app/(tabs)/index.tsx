@@ -1,9 +1,11 @@
-import React, { useState } from 'react';
-import { Text, View, TextInput, TouchableOpacity, StyleSheet, ScrollView, Image, Modal, Pressable, StatusBar } from 'react-native';
+import React, { useState, useEffect } from 'react';
+import { Text, View, TextInput, TouchableOpacity, StyleSheet, ScrollView, Image, Modal, Pressable, StatusBar, ActivityIndicator } from 'react-native';
 import { Picker } from '@react-native-picker/picker';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
+import LottieView from 'lottie-react-native'; // Importa LottieView
 
 const App = () => {
+  const [isLoading, setIsLoading] = useState(true); // Estado para la carga
   const [selectedGender, setSelectedGender] = useState('');
   const [birthDate, setBirthDate] = useState('');
   const [name, setName] = useState('');
@@ -14,6 +16,12 @@ const App = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [showAlert, setShowAlert] = useState(false);
+
+  useEffect(() => {
+    setTimeout(() => {
+      setIsLoading(false); 
+    }, 5500); //Aqui cambias el tiempo que quieras que este en la pantalla :)
+  }, []);
 
   const validateFields = () => {
     const requiredFields = [name, surname, age, username, selectedGender, phone, birthDate, email, password];
@@ -31,7 +39,6 @@ const App = () => {
 
   const handleSubmit = () => {
     if (validateFields()) {
-      // Aquí puedes implementar la lógica para enviar el formulario
       console.log("Formulario enviado");
     }
   };
@@ -39,6 +46,20 @@ const App = () => {
   const handleDateSelection = () => {
     console.log("Seleccionar fecha");
   };
+
+  if (isLoading) {
+    return (
+      <View style={styles.loadingContainer}>
+        <LottieView
+          source={require('../../assets/lollipop.json')} //De aqui se cambia el gif, eso si, debe ser .json si no no jala
+          autoPlay
+          loop
+          style={styles.loadingAnimation}
+        />
+        <Text style={styles.loadingText}>Cargando...</Text>
+      </View>
+    );
+  }
 
   return (
     <ScrollView contentContainerStyle={styles.scrollContainer}>
@@ -193,6 +214,21 @@ const App = () => {
 };
 
 const styles = StyleSheet.create({
+  loadingContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: '#ECECEC',
+  },
+  loadingAnimation: {
+    width: 150,
+    height: 150,
+  },
+  loadingText: {
+    marginTop: 10,
+    fontSize: 18,
+    color: '#000',
+  },
   scrollContainer: {
     flexGrow: 1,
     backgroundColor: '#ECECEC',
